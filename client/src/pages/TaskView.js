@@ -32,7 +32,12 @@ class TaskView extends React.Component{
             this.setState({chat:responseJson.data[0]});
             POSTRequest({userID:store.getState().id, query:{_id:this.state.chat.taskid}},'/retrieve/tasks',updateTaskData);
         }
-        POSTRequest({userID:store.getState().id, query:{_id:this.state.chatid}},'/retrieve/chats',updateData);
+        const refresh = ()=> {POSTRequest({userID:store.getState().id, query:{_id:this.state.chatid}},'/retrieve/chats',updateData)};
+        refresh();
+        this.interval = setInterval(refresh, 60000);
+    }
+    componentWillUnmount() {
+      clearInterval(this.interval);
     }
     render(){
         const saveMessage = (e) => {
@@ -53,6 +58,7 @@ class TaskView extends React.Component{
                     update:{chats:newMessage}, method:"$push"},
                 '/update/chat',updateData);
         }
+        
         const sendMessage = ()=>{
             serverSendMessage(this.state.message);
         };

@@ -64,7 +64,7 @@ class TaskList extends React.Component{
             <ShowInfo show={this.state.show} onClose={handleClose}
                 title={"Task: "+this.state.data[this.state.taskIndex].name}
                 body={this.state.data[this.state.taskIndex].description}
-                ok={takeTask} okLabel="Take Up/ Goto"/>
+                ok={takeTask} okLabel="Take Up"/>
             </div>
             
         );

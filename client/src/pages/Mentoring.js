@@ -22,12 +22,12 @@ function TaskBrief(props){
 function ChatBrief(props){
     //alert(JSON.stringify(props.task));
     return(
-    <Group name={"Task "+props.index} components=
+    <Group name={"Task Instance"} components=
         <div>
         <h4>{props.task.taskInfo.name}</h4>
         {props.task.taskInfo.description}
         <br/><br/>
-        <Link to={'/task/'+props.index}><Button variant="primary" type="submit" onClick={props.select}>
+        <Link to={'/task/'+props.task._id}><Button variant="primary" type="submit" onClick={props.select}>
         Open</Button></Link>
         </div>
     />
@@ -94,7 +94,7 @@ class Mentoring extends React.Component{
                     <br/><br/>
                 
                 <TabbedLayout components={
-                    [{title:"Tasks",component:managingTasks},
+                    [{title:"Tasks Created",component:managingTasks},
                     {title:"Current",component:datas},
                     {title:"In Review",component:waitingDatas},
                     {title:"Completed",component:completedDatas}]

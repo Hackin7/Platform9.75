@@ -24,30 +24,47 @@ class Database:
         self.userdata = self.database["user-data"]
         self.chats = self.database["chats"]
         self.tasks = self.database["tasks"]
-        
-        #self.ids = self.database["ids"]
-        self.taskid = 0
-        self.chatid = 0
+
         self.accountIDs = {}#{"1234":"lolcatz"}
-    
-    def incrementThingId(self,dataType):
-        pass
-    def getThingId(self,dataType):
-        pass
         
+        self.ids = self.database["ids"]
+        idSize=0
+        for i in self.ids.find():
+            idSize+=1
+        if idSize!=2 :
+            self.ids.drop()
+            self.ids = self.database["ids"]
+            self.ids.insert_many([{"type":"task","value":0},
+                                  {"type":"chat","value":0}])
+        #self.taskid = 0
+        #self.chatid = 0
+    ###ID System########################################################
+    def getThingId(self,type): 
+        #type can only be 'task' or 'chat'
+        return self.ids.find_one({"type":type})["value"]
+    def incrementThingId(self,type):
+        #newValue = self.ids.find_one({"task":type})["value"]+1
+        self.ids.update_one({"type":type},{"$inc":{"value":1}})
+    def useThingId(self,type):
+        value = str(self.getThingId(type))
+        self.incrementThingId(type)
+        return value
+    ####################################################################
     def debug(self):
         #print(self.accounts)
         print("######################################")
-        print("Accounts")
+        print("###Accounts######")
         for i in self.accounts.find():print(i)
         print("IDs")
         print(self.accountIDs)
         #print(self.userData)
-        print("UserData")
+        print("###thingIDs######")
+        for i in self.ids.find():print(i)
+        print("###UserData######")
         for i in self.userdata.find():print(i)
-        print("Chats")
+        print("###Chats#########")
         print(self.getChatData())
-        print("Tasks")
+        print("###Tasks########")
         print(self.getTaskData())
         print("######################################")
         
@@ -114,28 +131,27 @@ class Database:
         self.userdata.insert_one({"name":name, "chatids":[], "mentoringTaskIds":[], "mentoringChatIds":[]})
 
     def addtask(self, name, description, mentors=[]):
-        thetask = self.tasks.insert_one({'_id': str(self.taskid), 'name': name, "description": description, "mentors":mentors})
+        thingId = self.useThingId("task")
+        thetask = self.tasks.insert_one({'_id': thingId, 'name': name, "description": description, "mentors":mentors})
         ###Put under mentor's guidance#######################################################
         for i in mentors:
-            self.updateuserdata(i,{"mentoringTaskIds":str(self.taskid)},"$push")
-        self.taskid+=1
+            self.updateuserdata(i,{"mentoringTaskIds":thingId},"$push")
 
     def addchat(self, name, taskid):
         mentors = self.getTaskData({"_id":taskid})[0]["mentors"]
         #print("$$$$$$$$$$$$$$$$$$$$Mentors",mentors)
 
-        self.chats.insert_one({ "_id":str(self.chatid), "taskid": taskid ,"students":[name],"mentors":mentors,"chats":[], "state":0})
-        prevId=str(self.chatid)
-        self.chatid += 1
+        chatId = self.useThingId("chat")
+        self.chats.insert_one({ "_id":chatId, "taskid": taskid ,"students":[name],"mentors":mentors,"chats":[], "state":0})
         ###Insert in UserData###############################################################
         userData = self.getUserData({"name":name})
         print(userData)
-        userData["chatids"] += [prevId]
+        userData["chatids"] += [chatId]
         self.updateuserdata(name,{"chatids":userData["chatids"]})
         ###Put under mentor's guidance#######################################################
         for i in mentors:
-            self.updateuserdata(i,{"mentoringChatIds":str(prevId)},"$push")
-        return prevId
+            self.updateuserdata(i,{"mentoringChatIds":chatId},"$push")
+        return chatId
         
     ###Get#################################
     def getUserData(self,query={}):
