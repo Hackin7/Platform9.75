@@ -34,7 +34,7 @@ class TaskView extends React.Component{
         }
         const refresh = ()=> {POSTRequest({userID:store.getState().id, query:{_id:this.state.chatid}},'/retrieve/chats',updateData)};
         refresh();
-        this.interval = setInterval(refresh, 60000);
+        this.interval = setInterval(refresh, 30000);
     }
     componentWillUnmount() {
       clearInterval(this.interval);
