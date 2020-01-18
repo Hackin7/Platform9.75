@@ -25,7 +25,7 @@ class TaskList extends React.Component{
             show:false,
             newChatId:"",
             searchCriterion:{},
-            data:[{id:"12423",name:"Do Your Homework",description:"Stop failing your life and do something"}], 
+            data:[{id:"12423",name:"Loading",description:"Please be patient with us"}], 
             taskIndex:0
         };
     }

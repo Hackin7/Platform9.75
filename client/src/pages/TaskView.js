@@ -6,8 +6,8 @@ import {linkStore, store} from '../globalState.js';
 import {POSTRequest} from '../tools/networking.js';
 
 function Message(props){
-    return (<div>
-    <b>{props.date} {props.name} : </b>{props.message}
+    return (<div style={{display:"grid", gridTemplateColumns:"20% auto"}}>
+    <b>{props.date} {props.name} : </b><pre>{props.message}</pre><br/>
     </div>);
 }
 class TaskView extends React.Component{
@@ -17,24 +17,29 @@ class TaskView extends React.Component{
         this.state = {data:this.props.data,
                       chatid:id, 
                       message:"",
-                      chat:{id:"123", taskid:"123", chats:[],state:0, students:[store.getState().name]},
+                      chat:{id:"123", taskid:"123", chats:[],state:0, students:[store.getState().name], mentors:["admin"]},
                       task:{id:"12423",name:"Do Your Homework",description:"Stop failing your life and do something"}
                      };
+        
+        this.refresh = ()=>{
+            //alert();
+            const updateTaskData = (responseJson)=>{
+                //alert(JSON.stringify(responseJson));
+                this.setState({task:responseJson.data[0]});
+            }
+            const updateData = (responseJson)=>{
+                //alert(JSON.stringify(responseJson));
+                this.setState({chat:responseJson.data[0]});
+                POSTRequest({userID:store.getState().id, query:{_id:this.state.chat.taskid}},'/retrieve/tasks',updateTaskData);
+            }
+            POSTRequest({userID:store.getState().id, query:{_id:this.state.chatid}},'/retrieve/chats',updateData)
+        };
     }
     
+    
     componentDidMount() {
-        const updateTaskData = (responseJson)=>{
-            //alert(JSON.stringify(responseJson));
-            this.setState({task:responseJson.data[0]});
-        }
-        const updateData = (responseJson)=>{
-            //alert(JSON.stringify(responseJson));
-            this.setState({chat:responseJson.data[0]});
-            POSTRequest({userID:store.getState().id, query:{_id:this.state.chat.taskid}},'/retrieve/tasks',updateTaskData);
-        }
-        const refresh = ()=> {POSTRequest({userID:store.getState().id, query:{_id:this.state.chatid}},'/retrieve/chats',updateData)};
-        refresh();
-        this.interval = setInterval(refresh, 30000);
+        this.refresh();
+        this.interval = setInterval(this.refresh, 30000);
     }
     componentWillUnmount() {
       clearInterval(this.interval);
@@ -61,6 +66,7 @@ class TaskView extends React.Component{
         
         const sendMessage = ()=>{
             serverSendMessage(this.state.message);
+            this.setState({message:""});
         };
         
         const changeChatState = (val)=>{
@@ -87,14 +93,26 @@ class TaskView extends React.Component{
             changeChatState(0);
             serverSendMessage("Mentor Action: More Work Needed");
         };
+        
+        let studentsList = this.state.chat.students.map((student,index)=>{
+            if (index!=0){return ', ' +student;}
+            else{return student;}
+        });
+        let mentorsList = this.state.chat.mentors.map((student,index)=>{
+                    if (index!=0){return ', ' +student;}
+                    else{return student;}
+                });
+        let peopleShow = <span><b>Students: </b> {studentsList} <b style={{marginLeft:"1em"}}>Mentors: </b> {mentorsList}</span>;
         return (
             <div>
             <Top/>
-            <div style={{marginLeft:"auto",marginRight:"auto",width:"60%"}}>
-                <h1 style={{marginTop:"1em",marginBottom:"1em"}}>
+            <div style={{marginLeft:"auto",marginRight:"auto",width:"80%"}}>
+                <h1 style={{marginTop:"1em",marginBottom:"0.25em"}}>
                     Task: {this.state.task.name}</h1>
-                {this.state.task.description}
-                <br/><br/>
+                {peopleShow}<br/>
+                <div style={{maxHeight:"50vh", overflowY:"auto"}}>
+                    <b>Description: </b>{this.state.task.description}
+                </div><br/>
                 
                 {this.state.chat.students.includes(store.getState().name) ?
                     <Button 
@@ -117,7 +135,7 @@ class TaskView extends React.Component{
                                  'Completed')
                              }
                         </Button>
-                        {this.state.chat.state==1 ?
+                        {this.state.chat.state>=1 ?
                             <Button variant="danger" onClick={moreWorkNeeded}
                                 style={{marginLeft:"1em"}}>
                                 Request for More Work
@@ -127,20 +145,30 @@ class TaskView extends React.Component{
                         }
                     </span>
                 }
+                <Button variant="secondary" style={{float:"right"}} onClick={this.refresh}>
+                    &#8634;</Button>
                 <br/><br/>
-                <div style={{height:"45vh", overflowY:"auto"}}>
+                <div style={{height:"50vh", overflowY:"auto"}}>
                     {this.state.chat.chats.map((val,index)=> 
                         <Message date={val.dateTime} name={val.name} message={val.text}/>
                         )
                     }
                 </div>
-                <Form inline>
-                    <FormControl type="text" placeholder="Enter Message" 
+                    {/*<FormControl type="text" placeholder="Enter Message" 
                         className="mr-sm-2" style={{width:"80%"}}
                         value={this.state.message} onChange={saveMessage}
-                    />
-                    <Button variant="success" onClick={sendMessage}>Send</Button>
-                </Form>
+                    />*/}
+                    <div style={{
+                            display:"grid",
+                            "grid-template-columns": "90% auto"
+                        }}>
+                        <textarea style={{width:"100%",height:"2.5em"}}
+                            className="form-control"
+                            value={this.state.message} onChange={saveMessage}>
+                        </textarea>
+                        <Button variant="success" onClick={sendMessage}>
+                            Send</Button>
+                    </div>
             </div>
             </div>
         );

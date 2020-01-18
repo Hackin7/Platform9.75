@@ -7,11 +7,22 @@ import {POSTRequest} from '../tools/networking.js';
 
 function ChatBrief(props){
     //alert(JSON.stringify(props.task));
+    let studentsList = props.task.students.map((student,index)=>{
+                if (index!=0){return ', ' +student;}
+                else{return student;}
+            });
+    let mentorsList = props.task.mentors.map((student,index)=>{
+                if (index!=0){return ', ' +student;}
+                else{return student;}
+            });
+    let peopleShow = <span><b>Students: </b> {studentsList} <b style={{marginLeft:"1em"}}>Mentors: </b> {mentorsList}</span>;
     return(
     <Group name={"Task"} components=
         <div>
         <h4>{props.task.taskInfo.name}</h4>
-        {props.task.taskInfo.description}
+        {peopleShow}<br/>
+        <b>Description: </b>{props.task.taskInfo.description}
+        
         <br/><br/>
         <Link to={'/task/'+props.task._id}><Button variant="primary" type="submit" onClick={props.select}>
         Open</Button></Link>
@@ -86,4 +97,4 @@ class Home extends React.Component{
     }
 }
 
-export {Home};
+export {ChatBrief,Home};

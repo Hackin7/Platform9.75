@@ -4,6 +4,7 @@ import {Top, Group, TabbedLayout} from '../layout.js';
 import {Link, Redirect} from "react-router-dom";
 import {linkStore, store} from '../globalState.js';
 import {POSTRequest} from '../tools/networking.js';
+import {ChatBrief} from '../pages/Dashboard.js';
 
 function TaskBrief(props){
     //alert(JSON.stringify(props.task));
@@ -15,20 +16,6 @@ function TaskBrief(props){
         <br/><br/>
         <Link to={'/edit/'+props.task._id}><Button variant="primary" type="submit" onClick={props.select}>
         Edit</Button></Link>
-        </div>
-    />
-    );
-}
-function ChatBrief(props){
-    //alert(JSON.stringify(props.task));
-    return(
-    <Group name={"Task Instance"} components=
-        <div>
-        <h4>{props.task.taskInfo.name}</h4>
-        {props.task.taskInfo.description}
-        <br/><br/>
-        <Link to={'/task/'+props.task._id}><Button variant="primary" type="submit" onClick={props.select}>
-        Open</Button></Link>
         </div>
     />
     );

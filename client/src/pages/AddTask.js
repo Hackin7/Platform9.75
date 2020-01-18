@@ -10,7 +10,8 @@ class AddTask extends React.Component{
         super(props);
         this.state = {
                       name:"",
-                      description:""
+                      description:"",
+                      redirect:false
                      };
     }
     
@@ -28,10 +29,12 @@ class AddTask extends React.Component{
              params:{name:this.state.name, description:this.state.description}},
             '/add/task',null);
             alert("Added");
+            this.setState({redirect:true});
         };
         
         return (
             <div>
+            {this.state.redirect ? <Redirect to="/mentoring"/> : ''}
             <Top/>
             <div style={{marginLeft:"auto",marginRight:"auto",width:"60%"}}>
                 <h1 style={{marginTop:"1em",marginBottom:"1em"}}>
@@ -42,7 +45,7 @@ class AddTask extends React.Component{
                         className="mr-sm-2" 
                         value={this.state.name} onChange={saveName}
                     /><br/>
-                    <textarea style={{width:"100%",height:"50vh"}} 
+                    <textarea style={{width:"100%",height:"50vh"}} className="form-control"
                     value={this.state.description} onChange={saveDescription}>
                     </textarea>
                     <Button variant="success" onClick={addTask}>Send</Button>

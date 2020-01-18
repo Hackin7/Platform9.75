@@ -11,7 +11,8 @@ class EditTask extends React.Component{
         let id= this.props.match.params.id;
         this.state = {
                       taskId:id,
-                      task:{name:"",description:""}
+                      task:{name:"",description:""},
+                      redirect:false
                      };
     }
     
@@ -41,6 +42,7 @@ class EditTask extends React.Component{
              update:{name:this.state.task.name, description:this.state.task.description}},
             '/update/task',null);
             alert("Saved the Changes");
+            this.setState({redirect:true});
         };
         const deleteTask = ()=>{
             //const updateData = (responseJson)=>{this.setState({data:responseJson.notes});}
@@ -48,10 +50,12 @@ class EditTask extends React.Component{
             {userID:store.getState().id, thingId:this.state.taskId},
             '/remove/task',null);
             alert("Deleted Task");
+            this.setState({redirect:true});
         };
         
         return (
             <div>
+            {this.state.redirect ? <Redirect to="/mentoring"/> : ''}
             <Top/>
             <div style={{marginLeft:"auto",marginRight:"auto",width:"60%"}}>
                 <h1 style={{marginTop:"1em",marginBottom:"1em"}}>
@@ -62,7 +66,7 @@ class EditTask extends React.Component{
                         className="mr-sm-2" 
                         value={this.state.task.name} onChange={saveName}
                     /><br/>
-                    <textarea style={{width:"100%",height:"50vh"}} 
+                    <textarea style={{width:"100%",height:"50vh"}} className="form-control"
                     value={this.state.task.description} onChange={saveDescription}>
                     </textarea>
                     <Button variant="success" onClick={updateTask}>Update</Button>
