@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Button,NavItem,Card,Navbar,Nav,Dropdown,DropdownButton, Modal,Tabs,Tab} from 'react-bootstrap';
+import {Button,NavItem,Card,Navbar,Nav,Dropdown,DropdownButton, Modal,Tabs,Tab,Badge} from 'react-bootstrap';
 import * as React from 'react';
 import cookie from "react-cookies";
 import {linkStore, store} from './globalState.js';
@@ -106,4 +106,24 @@ function TabbedLayout(props){
       </Tab>)}
     </Tabs>);
 }
-export {Top,Group,ShowInfo, TabbedLayout};
+function ThingListing(props){
+    let sidespace = "0em";
+    if (props.sidespace!=null){sidespace = props.sidespace;}
+    return <span style={{marginLeft:sidespace}}>
+                <b>{props.label}</b> 
+                {props.list.map((item,index)=>{
+                    if (index!=0){return ', ' +item;}
+                    else{return item;}
+                })}
+            </span>;
+}
+function Tag(props){
+    return (<Badge variant="primary" disabled={true}>
+              <span>{props.name}</span>
+              {props.close==null?'':
+              <button onClick={props.close} 
+                    style={{padding:0,border:"none",background:"none", paddingLeft:"0.5em", color:"white"}}>
+                    ×</button> }
+            </Badge>);
+}
+export {Top,Group,ShowInfo,TabbedLayout,ThingListing,Tag};

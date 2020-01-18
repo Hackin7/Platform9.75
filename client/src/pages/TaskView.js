@@ -1,13 +1,15 @@
 import * as React from "react";
 import {Button,Card,Form, FormControl, Modal} from 'react-bootstrap';
-import {Top, Group, TabbedLayout, ShowInfo} from '../layout.js';
+import {Top, Group, TabbedLayout, ShowInfo, ThingListing} from '../layout.js';
 import {Link, Redirect} from "react-router-dom";
 import {linkStore, store} from '../globalState.js';
 import {POSTRequest} from '../tools/networking.js';
+import {ChatInfo} from '../TaskChatDisplay.js';
 
 function Message(props){
     return (<div style={{display:"grid", gridTemplateColumns:"20% auto"}}>
-    <b>{props.date} {props.name} : </b><pre>{props.message}</pre><br/>
+    <b>{props.date} {props.name} : </b>
+    <pre>{props.message}</pre><br/>
     </div>);
 }
 class TaskView extends React.Component{
@@ -94,25 +96,13 @@ class TaskView extends React.Component{
             serverSendMessage("Mentor Action: More Work Needed");
         };
         
-        let studentsList = this.state.chat.students.map((student,index)=>{
-            if (index!=0){return ', ' +student;}
-            else{return student;}
-        });
-        let mentorsList = this.state.chat.mentors.map((student,index)=>{
-                    if (index!=0){return ', ' +student;}
-                    else{return student;}
-                });
-        let peopleShow = <span><b>Students: </b> {studentsList} <b style={{marginLeft:"1em"}}>Mentors: </b> {mentorsList}</span>;
         return (
             <div>
             <Top/>
             <div style={{marginLeft:"auto",marginRight:"auto",width:"80%"}}>
                 <h1 style={{marginTop:"1em",marginBottom:"0.25em"}}>
                     Task: {this.state.task.name}</h1>
-                {peopleShow}<br/>
-                <div style={{maxHeight:"50vh", overflowY:"auto"}}>
-                    <b>Description: </b>{this.state.task.description}
-                </div><br/>
+                <ChatInfo chat={this.state.chat} task={this.state.task}/><br/>
                 
                 {this.state.chat.students.includes(store.getState().name) ?
                     <Button 
@@ -158,17 +148,18 @@ class TaskView extends React.Component{
                         className="mr-sm-2" style={{width:"80%"}}
                         value={this.state.message} onChange={saveMessage}
                     />*/}
-                    <div style={{
-                            display:"grid",
-                            "grid-template-columns": "90% auto"
-                        }}>
-                        <textarea style={{width:"100%",height:"2.5em"}}
-                            className="form-control"
-                            value={this.state.message} onChange={saveMessage}>
-                        </textarea>
-                        <Button variant="success" onClick={sendMessage}>
-                            Send</Button>
-                    </div>
+                <div style={{
+                        display:"grid",
+                        "grid-template-columns": "90% auto"
+                    }}>
+                    <textarea style={{width:"100%",height:"2.5em"}}
+                        className="form-control"
+                        value={this.state.message} onChange={saveMessage}>
+                    </textarea>
+                    <Button variant="success" onClick={sendMessage}>
+                        Send</Button>
+                </div>
+                <br/>
             </div>
             </div>
         );

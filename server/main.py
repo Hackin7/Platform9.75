@@ -135,7 +135,8 @@ def add(dataType):
     if dataType=="task":
         name=getData["name"]
         description=getData["description"]
-        db.addtask(name,description,[user])
+        tags=getData["tags"]
+        db.addtask(name,description,[user], tags)
     elif dataType=="chat":
         taskId=getData["taskId"]
         newChatId = db.addchat(user,taskId)

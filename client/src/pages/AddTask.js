@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button,Card,Form, FormControl, Modal} from 'react-bootstrap';
+/*import {Button,Card,Form, FormControl, Modal} from 'react-bootstrap';
 import {Top, Group, TabbedLayout, ShowInfo} from '../layout.js';
 import {Link, Redirect} from "react-router-dom";
 import {linkStore, store} from '../globalState.js';
@@ -56,4 +56,8 @@ class AddTask extends React.Component{
     }
 }
 
+export {AddTask};
+*/
+import {EditTask} from './TaskEdit.js';
+const AddTask = ()=><EditTask isadd={true}/>;
 export {AddTask};

@@ -130,9 +130,9 @@ class Database:
         print("$$$$$$$$$$ADDING USER DATA",name)
         self.userdata.insert_one({"name":name, "chatids":[], "mentoringTaskIds":[], "mentoringChatIds":[]})
 
-    def addtask(self, name, description, mentors=[]):
+    def addtask(self, name, description, mentors=[], tags={}):
         thingId = self.useThingId("task")
-        thetask = self.tasks.insert_one({'_id': thingId, 'name': name, "description": description, "mentors":mentors})
+        thetask = self.tasks.insert_one({'_id': thingId, 'name': name, "description": description, "mentors":mentors, "tags":tags})
         ###Put under mentor's guidance#######################################################
         for i in mentors:
             self.updateuserdata(i,{"mentoringTaskIds":thingId},"$push")

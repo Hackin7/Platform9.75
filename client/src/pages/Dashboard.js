@@ -1,50 +1,26 @@
 import * as React from "react";
 import {Button,Card,Form, FormControl, Modal} from 'react-bootstrap';
-import {Top, Group, TabbedLayout} from '../layout.js';
+import {Top, Group, TabbedLayout, ThingListing} from '../layout.js';
 import {Link, Redirect} from "react-router-dom";
 import {linkStore, store} from '../globalState.js';
 import {POSTRequest} from '../tools/networking.js';
-
-function ChatBrief(props){
-    //alert(JSON.stringify(props.task));
-    let studentsList = props.task.students.map((student,index)=>{
-                if (index!=0){return ', ' +student;}
-                else{return student;}
-            });
-    let mentorsList = props.task.mentors.map((student,index)=>{
-                if (index!=0){return ', ' +student;}
-                else{return student;}
-            });
-    let peopleShow = <span><b>Students: </b> {studentsList} <b style={{marginLeft:"1em"}}>Mentors: </b> {mentorsList}</span>;
-    return(
-    <Group name={"Task"} components=
-        <div>
-        <h4>{props.task.taskInfo.name}</h4>
-        {peopleShow}<br/>
-        <b>Description: </b>{props.task.taskInfo.description}
-        
-        <br/><br/>
-        <Link to={'/task/'+props.task._id}><Button variant="primary" type="submit" onClick={props.select}>
-        Open</Button></Link>
-        </div>
-    />
-    );
-}
+import {TaskBrief,TaskEditButton,ChatBrief,stuffMap,searchMatch} from '../TaskChatDisplay.js';
 
 
 class Home extends React.Component{
     constructor(props) {
         super(props);
         this.state={
-            data:[],
-            waitingData:[],
-            donedata:[],  
+            data:[],matchData:[],
+            waitingData:[],matchWaitingData:[],
+            donedata:[],  matchDoneData:[],
+            searchQuery:"",
             chatid:0
         };
     }
     
     componentDidMount() {
-        const updateData = (responseJson)=>{this.setState({data:responseJson.data});}
+        const updateData = (responseJson)=>{this.setState({data:responseJson.data,matchData:Object.keys(responseJson.data)});}
         POSTRequest(
             {
                 userID:store.getState().id,
@@ -52,7 +28,7 @@ class Home extends React.Component{
             },
             '/retrieve/usertasks',updateData);
         
-        const updateInTheWorksData = (responseJson)=>{this.setState({waitingData:responseJson.data});}
+        const updateInTheWorksData = (responseJson)=>{this.setState({waitingData:responseJson.data,matchWaitingData:Object.keys(responseJson.data)});}
             //alert(JSON.stringify(responseJson));}
         POSTRequest(
             {
@@ -60,7 +36,7 @@ class Home extends React.Component{
                 query:{state:1,students:{"$all":[store.getState().name]}}
             },'/retrieve/usertasks',updateInTheWorksData);
         
-        const updateDoneData = (responseJson)=>{this.setState({donedata:responseJson.data});}
+        const updateDoneData = (responseJson)=>{this.setState({donedata:responseJson.data,matchDoneData:Object.keys(responseJson.data)});}
         POSTRequest(
             {
                 userID:store.getState().id,
@@ -68,19 +44,34 @@ class Home extends React.Component{
             },'/retrieve/usertasks',updateDoneData);
     }
     render(){
-        
-        let datas = this.state.data.map((task,index)=> 
-                <ChatBrief task={task} index={index} select={()=>{}}/>);
-        let waitingDatas = this.state.waitingData.map((task,index)=> 
-                <ChatBrief task={task} index={index} select={()=>{}}/>);
-        let completedDatas = this.state.donedata.map((task,index)=> 
-                <ChatBrief task={task} index={index} select={()=>{}}/>);
+        const saveQuery = (e)=>{
+            this.setState({searchQuery:e.target.value});
+        }
+        ////Filtering System//////////////////////////////////////////////////////////////
+        const filterByTag = (matchKey)=>{
+            return (keys)=>{let update={};update[matchKey]=keys;this.setState(update);};
+        }
+        let chatMap = (getTagList,list,key,match) => <div>
+                <br/>
+                <FormControl type="text" placeholder="Search" className="mr-sm-2"  value={this.state.searchQuery}
+                onChange={saveQuery}/>
+                {stuffMap(filterByTag,getTagList,list,key, match,
+                (task,index)=>searchMatch(task,this.state.searchQuery)?<ChatBrief task={task} index={index} select={()=>{}}/>:'')}</div>;
+                            
+        let datas = chatMap(()=>this.state.data.map(chat=>chat.taskInfo.tags),
+                            this.state.data,"matchData", this.state.matchData);
+                            
+        let waitingDatas = chatMap(()=>this.state.waitingData.map(chat=>chat.taskInfo.tags),
+                            this.state.waitingData,"matchWaitingData", this.state.matchWaitingData);
+        let completedDatas = chatMap(()=>this.state.donedata.map(chat=>chat.taskInfo.tags),
+                            this.state.donedata,"matchDoneData", this.state.matchDoneData);
+        /////////////////////////////////////////////////////////////////////////////
         return (
             <div>
             <Top/>
             
-            <div style={{marginLeft:"auto",marginRight:"auto",width:"60%"}}>
-                <h1 style={{marginTop:"1em",marginBottom:"1em"}}>Dashboard</h1>
+            <div style={{marginLeft:"auto",marginRight:"auto",width:"80%"}}>
+                <h1 style={{marginTop:"1em",marginBottom:"0.25em"}}>Dashboard</h1>
                 <Link to="/tasklist"><Button variant="secondary">
                     Find More Tasks</Button></Link>
                     <br/><br/>
