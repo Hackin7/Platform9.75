@@ -48,13 +48,13 @@ function Top(props){
     
     const UserMenu = 
         <DropdownButton title={store.getState().name} variant="secondary"
-                        style={{paddingLeft:"5em"}}>
+                        >
                 <Dropdown.Item><Link to="/usersettings" style={{color:"black"}}>User Settings</Link></Dropdown.Item>
                 <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
         </DropdownButton>;
         
     return(
-      <Navbar bg="dark" variant="dark">
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       {store.getState().id=="" || store.getState().id==null ? <Redirect to="/login"/> : ''}
     <Link to="/"><Navbar.Brand>
     <img
@@ -66,16 +66,18 @@ function Top(props){
       />
     </Navbar.Brand></Link>
     
-    <Nav className="mr-auto">
-      <Link to="/" style={{color:"gray"}}><NavItem>Dashboard</NavItem></Link>
-      <Link to="/tasklist" style={{paddingLeft:"1em",color:"gray"}}><NavItem>Task List</NavItem></Link>
-      <Link to="/mentoring" style={{paddingLeft:"1em",color:"gray"}}><NavItem>Mentoring</NavItem></Link>
-      <Link to="/contactus" style={{paddingLeft:"1em",color:"gray"}}><NavItem>Contact Us</NavItem></Link>
-      {/*<Link to="/suggest" style={{ paddingLeft:"1em",color:"gray"}}><NavItem>Suggest Task</NavItem></Link>*/}
-      {/*<Link to="/addtask" style={{ paddingLeft:"1em",color:"gray"}}><NavItem>Add Task</NavItem></Link>*/}
-    </Nav>
-    <Nav pullRight>{UserMenu}</Nav>
-    
+    <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+    <Navbar.Collapse id="responsive-navbar-nav">
+        <Nav className="mr-auto">
+          <Nav.Link><Link to="/" style={{color:"gray"}}>Dashboard</Link></Nav.Link>
+          <Nav.Link><Link to="/tasklist" style={{color:"gray"}}>Task List</Link></Nav.Link>
+          <Nav.Link><Link to="/mentoring" style={{color:"gray"}}>Mentoring</Link></Nav.Link>
+          <Nav.Link><Link to="/contactus" style={{color:"gray"}}>Contact Us</Link></Nav.Link>
+          {/*<Link to="/suggest" style={{ paddingLeft:"1em",color:"gray"}}><NavItem>Suggest Task</NavItem></Link>*/}
+          {/*<Link to="/addtask" style={{ paddingLeft:"1em",color:"gray"}}><NavItem>Add Task</NavItem></Link>*/}
+        </Nav>
+        <Nav>{UserMenu}</Nav>
+    </Navbar.Collapse>
   </Navbar>);
 }
 
