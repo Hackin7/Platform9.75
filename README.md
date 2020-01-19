@@ -39,14 +39,18 @@ To use the APIs, put in the mongoDB URI and sendGrid(for Email Service)API Key i
 Make sure to put in the API Keys in `DockerImage/keys_TEMPLATE.py` and rename it to `DockerImage/keys.py`
 ```
 sudo docker build DockerImage
-sudo docker run <containerID>
+sudo docker run -p 3000 <containerID>
 ```
 ### Deploying on Heroku (Using Docker)
 Check [here](https://devcenter.heroku.com/articles/container-registry-and-runtime#testing-an-image-locally]) for more help
 ```
 cd DockerImage
-sudo heroku container:push -a <appName>
+sudo heroku container:push web -a <appName>
 sudo heroku container:release web -a <appName>
+# If any errors
+sudo heroku run bash #Check the stuff
+sudo heroku logs -a <appName> #View logs
 ```
 You can put in mLab MongoDB free tier Database, along with sendGrid (free), to host this service for free.
+* When using mLab, make sure to whitelist 0.0.0.0/0, so that heroku can access. Thanks [StackOverFlow](https://stackoverflow.com/questions/42159175/connecting-heroku-app-to-atlas-mongodb-cloud-service)!
 However, the file upload system would be such that the files uploaded only last for a certain short period of a time, max 24 hours.
