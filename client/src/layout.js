@@ -134,7 +134,10 @@ function ThingListing(props){
             </span>;
 }
 function Tag(props){
-    return (<Badge variant="primary" disabled={true}>
+    let variant = "primary";
+    if (props.variant == null){}//variant="primary";}
+    else{variant = props.variant;}
+    return (<Badge variant={variant} disabled={true} style={{marginLeft:"0.25em"}}>
               <span>{props.name}</span>
               {props.close==null?'':
               <button onClick={props.close} 

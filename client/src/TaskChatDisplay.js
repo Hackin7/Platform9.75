@@ -1,6 +1,6 @@
 import * as React from "react";
 import {Button,Card,Form, FormControl, Modal} from 'react-bootstrap';
-import {Top, Group, TabbedLayout, ShowInfo, ThingListing} from './layout.js';
+import {Top, Group, TabbedLayout, ShowInfo, ThingListing,Tag} from './layout.js';
 import {Link, Redirect} from "react-router-dom";
 ///Tag Filtering/////////////////////////////////////////////////
 const inArray = function(item,array){
@@ -238,10 +238,17 @@ console.log(found_data)
 ///React Components//////////////////////////////////////////////
 function TaskInfo(props){
     if (props.task.tags==null){props.task.tags={};}
-    let tagShow = <span><b>Tags: </b>{JSON.stringify(props.task.tags)}</span>;
+    let tagShow = <span><b>Tags: </b>{
+        Object.keys(props.task.tags).map((cat,index)=>{
+            return (<div style={{marginLeft:"0.5em"}}>{cat}:{props.task.tags[cat].map((val,index)=>{
+                    return <Tag name={val} variant="secondary"/>;
+                })}
+                </div>);
+        })
+        }</span>;
     return (<div style={{maxHeight:"50vh", overflowY:"auto"}}>
         <ThingListing list={props.task.mentors} label="Mentors: "/><br/>
-        {tagShow}<br/>
+        {tagShow}
         <b>Description: </b>{props.task.description}
         </div>);
 }

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button,Card,Form, FormControl, Modal} from 'react-bootstrap';
+import {Button,Card,Form, FormControl, Modal, Table} from 'react-bootstrap';
 import {Top, Group, TabbedLayout, ShowInfo, Tag} from '../layout.js';
 import {Link, Redirect} from "react-router-dom";
 import {linkStore, store} from '../globalState.js';
@@ -129,17 +129,25 @@ class EditTask extends React.Component{
                     />
                     <Button variant="success" onClick={addTagCat}>Add Category</Button><br/>
                     <br/>
-                    Category : Tags<br/>
+                    <Table striped bordered hover>
+                      <thead><tr>
+                          <th style={{"width": "16.66%"}}>Categories</th>
+                          <th>Tags</th>
+                        </tr>
+                      </thead>
+                      <tbody>
                     {Object.entries(this.state.task.tags).map((val)=>{
-                        return (<span>
-                            <Tag name={val[0]} close={()=>removeTagCat(val[0])}/>: 
+                        return (<tr>
+                            <th>
+                                <Tag name={val[0]} close={()=>removeTagCat(val[0])}/>                          
+                            </th><th>
                             {val[1].map((tag,index)=>{
-                                return <Tag name={tag} close={()=>removeTag(val[0],index)}/>;
+                                return <Tag style={{marginLeft:"0.5em"}} name={tag} close={()=>removeTag(val[0],index)}/>;
                             })}
                             <Button variant="success" onClick={()=>addTag(val[0])} 
-                                style={{marginLeft:"1em", padding:"0em", width:"1.5em"}}>+</Button>
-                            <br/>
-                        </span>);})}
+                                style={{marginLeft:"1em", padding:"0em", width:"1.5em"}}>+</Button></th>
+                            </tr>);})}
+                        </tbody></Table>
                     <br/>
                     
                     <b>Description:</b>
