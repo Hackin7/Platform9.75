@@ -97,15 +97,21 @@ class Database:
         myquery = { "name": name }
         user = self.accounts.find(myquery)
         
-        print("hasAccount",name,"=>",user.count())
+        #print("hasAccount",name,"=>",user.count())
         self.debug()
         return user.count()
         #return name in self.accounts.keys()
         
+    def getEmail(self, name):
+        myquery = { "name": name }
+        email = self.accounts.find_one(myquery)
+        #print(email)
+        email = email["email"]
+        return email       
     def getPassword(self, name):
         myquery = { "name": name }
         password = self.accounts.find_one(myquery)["password"]
-        return password        
+        return password    
     ###Local Storage################################
     def getIdFromName(self, name):
         key_list = list(self.accountIDs.keys()) 
@@ -127,7 +133,7 @@ class Database:
     
     ###Add#################################
     def adduserdata(self, name):
-        print("$$$$$$$$$$ADDING USER DATA",name)
+        #print("$$$$$$$$$$ADDING USER DATA",name)
         self.userdata.insert_one({"name":name, "chatids":[], "mentoringTaskIds":[], "mentoringChatIds":[]})
 
     def addtask(self, name, description, mentors=[], tags={}):
@@ -196,18 +202,21 @@ class Database:
             data[-1]["_id"] = str(data[-1]["_id"])
             task = self.tasks.find_one({"_id":i["taskid"]})
             data[-1]["taskInfo"] = task
-        print(data)
+        #print(data)
         return data
     ###Update#################################
+    def updateAccountData(self, name, update, method="$set"):
+        self.accounts.update({"name":name},{method: update},False)
+
     def updateuserdata(self, name, update, method="$set"):
-        self.userdata.update({"name":name},{method: update})
+        self.userdata.update({"name":name},{method: update},False)
 
     def updatechat(self, _id, update, method="$set"):
-        self.chats.update_one({"_id": _id},{method:update})
+        self.chats.update_one({"_id": _id},{method:update},False)
         return self.getChatData({"_id":_id})
 
     def updatetask(self, _id, update, method="$set"):
-        self.tasks.update_one({'_id':_id},{method:update})
+        self.tasks.update_one({'_id':_id},{method:update},False)
         return self.getTaskData({"_id":_id})
 
     ###Remove#################################

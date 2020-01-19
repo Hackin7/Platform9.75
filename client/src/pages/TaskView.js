@@ -83,16 +83,31 @@ class TaskView extends React.Component{
                 '/update/chat',updateData);
             this.setState({chat:chat});
         };
+        const notify = (subject,content)=>{
+            POSTRequest(
+                {userID:store.getState().id,
+                fromAcc:store.getState().name,
+                toAcc:this.state.chat.students.includes(store.getState().name)?
+                    this.state.chat.mentors[0]:
+                    this.state.chat.students[0],
+                 subject:subject,content:content},
+                '/notify',null);
+        }
         const submitForReview = ()=>{
             changeChatState(1);
+             notify("Task: "+this.state.task.name+", Please Review","The student "+this.state.chat.students[0]+" has submited the task for Review. Please review the task on Platform 9.75 within 3 Working days");
             serverSendMessage("Student Action: Submit for Review");
+            
         };
         const submitAsApproved = ()=>{
             changeChatState(2);
+            notify("Task: "+this.state.task.name+", Completed","Congratulations! Your Mentor "+this.state.chat.mentors[0]+" has marked the task as completed. ");
             serverSendMessage("Mentor Action: Completed");
         };
         const moreWorkNeeded = ()=>{
             changeChatState(0);
+            //emailNotify("Mentor Action: More Work Needed","Mentor Action: More Work Needed");
+            notify("Task: "+this.state.task.name+", More Work Needed","Your Mentor "+this.state.chat.mentors[0]+" has asked for more work.");
             serverSendMessage("Mentor Action: More Work Needed");
         };
         

@@ -47,6 +47,7 @@ function Top(props){
     const UserMenu = 
         <DropdownButton title={store.getState().name} variant="secondary"
                         style={{paddingLeft:"5em"}}>
+                <Dropdown.Item><Link to="/usersettings" style={{color:"black"}}>User Settings</Link></Dropdown.Item>
                 <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
         </DropdownButton>;
         

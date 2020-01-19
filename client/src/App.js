@@ -26,6 +26,7 @@ import {TaskList} from './pages/TasksList.js';
 import {AddTask} from './pages/AddTask.js';
 import {Mentoring} from './pages/Mentoring.js';
 import {EditTask} from './pages/TaskEdit.js';
+import {UserSettings} from './pages/UserSettings.js';
 //////////////////////////////////////////////////////////////////////
 
 
@@ -60,6 +61,9 @@ function App(props){
           </Route>
           <Route path="/mentoring">
             <Mentoring/>
+          </Route>
+          <Route path="/usersettings">
+            <UserSettings/>
           </Route>
           <Route path="/">
             <Home/>

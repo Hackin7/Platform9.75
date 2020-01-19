@@ -112,16 +112,20 @@ class TagSelection extends React.Component{
     }
 }
 
-let stuffMap =  (filterByTag,getTagList,list,key,match,method) => <span style={{display:"grid",gridTemplateColumns:"20% auto"}}>
+let stuffMap =  (filterByTag,getTagList,list,key,match,method) => 
+                <span style={{display:"grid",gridTemplateColumns:"20% auto"}}>
                 <div><br/>
-                    <TagSelection getTagList={getTagList} onChange={filterByTag(key)}/>
+                    {list.length>0 ? 
+                        <TagSelection getTagList={getTagList} onChange={filterByTag(key)}/>
+                        : <h5>No Items Here</h5>
+                        }
                 </div>
                 <div>
                     {list.map((task,index)=> 
-                        {return match.includes(index.toString())?
-                                method(task,index):'';
-                        })
-                    }
+                    {return match.includes(index.toString())?
+                            method(task,index):'';
+                    })}
+                    
                 </div>
                 </span>;
 

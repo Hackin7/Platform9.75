@@ -13,6 +13,7 @@ class L extends React.Component{
         this.state = {
             creating:false, //
             name:"",//this.data.name,
+            email:"",
             password:"",
             id:""
         }//this.data.password};
@@ -27,6 +28,10 @@ class L extends React.Component{
             this.setState({password: e.target.value });
             this.props.update({password:e.target.value});
         }
+        const updateEmail= (e)=> {
+            this.setState({email: e.target.value });
+            this.props.update({email:e.target.value});
+        }
         const updateID = (val)=>{
             if (val != ""){
                 let loginAuth = JSON.stringify({id:val, name:this.state.name});
@@ -38,7 +43,7 @@ class L extends React.Component{
 
         const handleSubmit = ()=>{
             if (this.state.creating){
-                POSTRequest({name:this.state.name, password:this.state.password},
+                POSTRequest({name:this.state.name,email:this.state.email, password:this.state.password},
                 '/createaccount', (responseJson)=>{
                     if (responseJson.valid){
                         alert("Account Created");
@@ -62,13 +67,21 @@ class L extends React.Component{
             {(this.state.id=="" || this.state.id==null) ?  this.state.id==null: <Redirect to="/" />}
             <Form>
              <h2>{this.state.creating ? "Create Account" : "Login"}</h2>
-              <Form.Group controlId="formBasicEmail">
+              <Form.Group controlId="formBasicName">
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="name" placeholder="Enter Name" 
                     value={this.state.name} 
                     onChange={updateName}/>
               </Form.Group>
               
+              {this.state.creating ?
+                  <Form.Group controlId="formBasicEmail">
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control type="email" placeholder="Enter Email" 
+                        value={this.state.email}
+                        onChange={updateEmail}/>
+                  </Form.Group>
+                  :''}
               <Form.Group controlId="formBasicPassword">
                 <Form.Label>Password</Form.Label>
                 <Form.Control type="password" placeholder="Password"

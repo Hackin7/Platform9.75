@@ -3,6 +3,7 @@
 To run client side code
 ```
 cd client
+npm install react-scripts
 sudo npm start #sudo to run on port 80
 ```
 To run server side code
