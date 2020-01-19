@@ -19,7 +19,7 @@ sg = SendGridAPIClient(apikey)#apiKeyos.environ.get('SENDGRID_API_KEY'))
 def notify(fromEmail,toEmail,subject,content):
     print("Notifying", fromEmail, toEmail)
     message = Mail(
-        from_email=fromEmail,
+        from_email="platform9.75@email.com",#fromEmail,
         to_emails=toEmail,
         subject=subject,
         html_content=content)
