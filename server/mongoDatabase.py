@@ -226,10 +226,19 @@ class Database:
         ###TODO, Remove id of chat from userdata
 
 
+def getDatabase():
+    try:
+        import keys
+        if keys.mdb == "":raise Exception
+        db = Database(keys.mdb)
+    except Exception as e:
+        print("Online Error/ Not available", e)
+        db = Database()
+    return db
 if __name__ == '__main__':
     stuff = input("Enter 'remove' to reset database: ")
     if stuff == "remove":
-        db = Database()
+        db = getDatabase()
         db.remove()
     else:
         print("Database not removed")
@@ -237,9 +246,9 @@ if __name__ == '__main__':
     if stuff=="drive":
         print("driving")
         #import mongoDatabase as mdb
-        db = Database()
+        db = getDatabase()
         db.remove()
-        db = Database()
+        db = getDatabase()
         db.addAccount("lolcatz","shit")
         db.addAccount("admin","shit")
         db.addtask("Hello","World",["admin"])

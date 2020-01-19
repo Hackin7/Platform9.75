@@ -14,8 +14,10 @@ def randomString(stringLength=10):
     letters = string.ascii_lowercase
     return ''.join(random.choice(letters) for i in range(stringLength))
 
-from mongoDatabase import Database
-db = Database()
+from mongoDatabase import Database,getDatabase
+import sys
+
+db = getDatabase()
 import notifier
 
 ###Account Management###################################################
@@ -239,6 +241,8 @@ def upload():
                 filename = file.filename#secure_filename(file.filename)
                 print(filename)
                 
+                if not os.path.exists(UPLOAD_FOLDER):
+                    os.system("mkdir ."+UPLOAD_FOLDER)
                 bucket = randomString()
                 while os.path.exists(os.path.join(UPLOAD_FOLDER,bucket)):
                     bucket = randomString()
