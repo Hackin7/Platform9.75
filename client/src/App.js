@@ -39,16 +39,27 @@ function RetrieveFile(props){
     .then(response => response.blob())
     .then(blob => {
         var url = window.URL.createObjectURL(blob);
-        var a = document.createElement('a');
+        var a = document.getElementById('redownload');
         a.href = url;
         a.download = name;
-        document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
         a.click();    
-        a.remove();  //afterwards we remove the element again         
+        //a.remove();  //afterwards we remove the element again         
     });
-    return "";
+    return <div style={{margin:"auto", margin:"1em"}}>
+        <h1>Downloading</h1>
+        <p>You should download {name} soon. Click <a id="redownload">Here</a> to download if it doesnt download within 5 seconds.</p>
+        
+    </div>;
 }
 
+function ContactUs(){
+    return (<div>
+    <Top/>
+    
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSe0WpgILg8vXrOpCqgHfZunji-SzkKlr_qNtmri67AAbk3uew/viewform?embedded=true" 
+    style={{margin:"auto",width:"100%", height:"90vh"}}>Loading…</iframe>
+    </div>);
+}
 //https://reacttraining.com/react-router/web/guides/quick-start
 function App(props){
     return (
@@ -81,6 +92,9 @@ function App(props){
           </Route>
           <Route path="/usersettings">
             <UserSettings/>
+          </Route>
+          <Route path="/contactus">
+            <ContactUs/>
           </Route>
           <Route path="/">
             <Home/>

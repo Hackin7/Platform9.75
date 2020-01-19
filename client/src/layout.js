@@ -70,10 +70,12 @@ function Top(props){
       <Link to="/" style={{color:"gray"}}><NavItem>Dashboard</NavItem></Link>
       <Link to="/tasklist" style={{paddingLeft:"1em",color:"gray"}}><NavItem>Task List</NavItem></Link>
       <Link to="/mentoring" style={{paddingLeft:"1em",color:"gray"}}><NavItem>Mentoring</NavItem></Link>
+      <Link to="/contactus" style={{paddingLeft:"1em",color:"gray"}}><NavItem>Contact Us</NavItem></Link>
       {/*<Link to="/suggest" style={{ paddingLeft:"1em",color:"gray"}}><NavItem>Suggest Task</NavItem></Link>*/}
       {/*<Link to="/addtask" style={{ paddingLeft:"1em",color:"gray"}}><NavItem>Add Task</NavItem></Link>*/}
     </Nav>
-    {UserMenu}
+    <Nav pullRight>{UserMenu}</Nav>
+    
   </Navbar>);
 }
 

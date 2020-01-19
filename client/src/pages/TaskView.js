@@ -16,7 +16,6 @@ function Message(props){
 
 
 function BasicUpload(props) {
-    
   const {acceptedFiles, getRootProps, getInputProps} = useDropzone();
   const files = acceptedFiles.map(file => (
     <li key={file.path}>
@@ -41,9 +40,9 @@ function BasicUpload(props) {
                         </section>;
   return (
   <ShowInfo show={props.show} onClose={props.stopUpload}
-                title={"Uploading Files"}
+                title={"Uploading File"}
                 body={uploadLogic}
-                ok={()=>{upload()}} okLabel="Send Files"/>
+                ok={()=>{upload()}} okLabel="Upload File"/>
   );
 }
 
