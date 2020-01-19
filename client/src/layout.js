@@ -48,9 +48,9 @@ function Top(props){
     
     const UserMenu = 
     <Dropdown>
-  <Dropdown.Toggle variant="secondary" style={{whiteSpace:"pre"}}>{store.getState().name}                  </Dropdown.Toggle>
+  <Dropdown.Toggle variant="secondary" style={{whiteSpace:"pre", minWidth:"10em"}}>{store.getState().name}                  </Dropdown.Toggle>
 
-  <Dropdown.Menu>
+  <Dropdown.Menu class="dropdown-menu">
         
                 <Dropdown.Item><Link to="/usersettings" style={{color:"black"}}>Settings</Link></Dropdown.Item>
                 <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
