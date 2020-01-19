@@ -5,12 +5,12 @@ import cookie from "react-cookies";
 import {linkStore, store} from './globalState.js';
 import {Redirect,Link} from "react-router-dom";
 import {POSTRequest} from './tools/networking.js';
+import logo from './logo.png';
 
 function useForceUpdate(){
     const [value, setValue] = React.useState(0); // integer state
     return () => setValue(value => ++value); // update the state to force render
 }
-
 function Top(props){
     const forceUpdate = useForceUpdate();
     var loginAuth = cookie.load('loginAuth');
@@ -22,7 +22,7 @@ function Top(props){
         props.update({id:""});
         forceUpdate();
     }
-
+    //alert("ID"+store.getState().id);
     if (loginAuth != null && store.getState().id == ""){
         //let loginAuthData = JSON.parse(loginAuth);
         //alert(loginAuth.name);
@@ -56,7 +56,16 @@ function Top(props){
     return(
       <Navbar bg="dark" variant="dark">
       {store.getState().id=="" || store.getState().id==null ? <Redirect to="/login"/> : ''}
-    <Link to="/"><Navbar.Brand>Platform 9.75</Navbar.Brand></Link>
+    <Link to="/"><Navbar.Brand>
+    <img
+        src={logo}
+        width="80"
+        height="30"
+        className="d-inline-block align-top"
+        alt="Platform 9.75"
+      />
+    </Navbar.Brand></Link>
+    
     <Nav className="mr-auto">
       <Link to="/" style={{color:"gray"}}><NavItem>Dashboard</NavItem></Link>
       <Link to="/tasklist" style={{paddingLeft:"1em",color:"gray"}}><NavItem>Task List</NavItem></Link>

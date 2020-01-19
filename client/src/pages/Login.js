@@ -7,6 +7,8 @@ import * as React from "react";
 import {Redirect} from "react-router-dom";
 import {POSTRequest} from '../tools/networking.js';
 
+import logo from '../logo.png';
+
 class L extends React.Component{
     constructor(props) {
         super(props);
@@ -33,12 +35,14 @@ class L extends React.Component{
             this.props.update({email:e.target.value});
         }
         const updateID = (val)=>{
-            if (val != ""){
+            //alert(val);
+            //if (val != ""){
                 let loginAuth = JSON.stringify({id:val, name:this.state.name});
                 cookie.save("loginAuth", loginAuth, {path: "/"});
-            }
+            //}
+            this.props.update({id: val});
             this.setState({id: val });
-            this.props.update({id:val});
+            //alert(store.getState().id);
         }
 
         const handleSubmit = ()=>{
@@ -65,8 +69,9 @@ class L extends React.Component{
         return (
             <header className="App-header">
             {(this.state.id=="" || this.state.id==null) ?  this.state.id==null: <Redirect to="/" />}
+            <img src={logo} width="25%" height="15%" alt="Platform 9.75" /><br/>
             <Form>
-             <h2>{this.state.creating ? "Create Account" : "Login"}</h2>
+             <h3>{this.state.creating ? "Create Account" : "Login"}</h3>
               <Form.Group controlId="formBasicName">
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="name" placeholder="Enter Name" 
