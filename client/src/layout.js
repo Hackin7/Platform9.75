@@ -16,6 +16,13 @@ function Top(props){
     var loginAuth = cookie.load('loginAuth');
     //alert(loginAuth);
     //alert(window.loggedin);
+    const logout = ()=>{
+        //alert("Logging Out");
+        cookie.remove("loginAuth", {path: "/"});
+        props.update({id:""});
+        forceUpdate();
+    }
+
     if (loginAuth != null && store.getState().id == ""){
         //let loginAuthData = JSON.parse(loginAuth);
         //alert(loginAuth.name);
@@ -32,16 +39,11 @@ function Top(props){
             else{
                 cookie.remove("loginAuth", {path: "/"});
                 alert("Session Expired");
+                logout();
             }
             //forceUpdate();
         });
         props.update({id:loginAuth.id, name:loginAuth.name});
-    }
-    const logout = ()=>{
-        //alert("Logging Out");
-        cookie.remove("loginAuth", {path: "/"});
-        props.update({id:""});
-        forceUpdate();
     }
     
     const UserMenu = 

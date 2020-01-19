@@ -31,7 +31,23 @@ import {UserSettings} from './pages/UserSettings.js';
 
 
 //Home = connect(mapStateToProps)(Home);
-
+function RetrieveFile(props){
+    let bucket = props.match.params.bucket;
+    let name = props.match.params.name;
+    //alert(directory);
+    fetch("/static/"+bucket+"/"+name)
+    .then(response => response.blob())
+    .then(blob => {
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = name;
+        document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+        a.click();    
+        a.remove();  //afterwards we remove the element again         
+    });
+    return "";
+}
 
 //https://reacttraining.com/react-router/web/guides/quick-start
 function App(props){
@@ -46,6 +62,7 @@ function App(props){
             <Login/>
           </Route>
           <Route path="/task/:id" component={TaskView}/>
+          <Route path="/static/:bucket/:name" component={RetrieveFile}/>
           <Route path="/edit/:id" component={EditTask}/>
           <Route path="/tasklist">
             <TaskList/>
