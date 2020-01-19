@@ -15,7 +15,7 @@ class EditTask extends React.Component{
         else{id= this.props.match.params.id;}
         this.state = {
                       taskId:id,
-                      task:{name:"",description:"", tags:[]},
+                      task:{name:"",description:"", tags:{}},
                       tagCatToAdd:"",
                       tagToAdd:"",
                       redirect:false
@@ -25,8 +25,11 @@ class EditTask extends React.Component{
     componentDidMount() {
         if (!this.isNewTask){
             const updateData = (responseJson)=>{
+                //alert();
                 //alert(JSON.stringify(responseJson));
-                this.setState({task:responseJson.data[0]});
+                let task = responseJson.data[0];
+                if (Array.isArray(task.tags)){task.tags={};}
+                this.setState({task:task});
             }
             POSTRequest({userID:store.getState().id, query:{_id:this.state.taskId}},'/retrieve/tasks',updateData);
         }
