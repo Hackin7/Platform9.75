@@ -257,7 +257,14 @@ function ChatInfo(props){
                      <ThingListing sidespace="1em" list={props.chat.mentors} label="Mentors: "/>
                     </span>;
     if (props.task.tags==null){props.task.tags={};}
-    let tagShow = <span><b>Tags: </b>{JSON.stringify(props.task.tags)}</span>;
+    let tagShow = <span><b>Tags: </b>{
+        Object.keys(props.task.tags).map((cat,index)=>{
+            return (<div style={{marginLeft:"0.5em"}}>{cat}:{props.task.tags[cat].map((val,index)=>{
+                    return <Tag name={val} variant="secondary"/>;
+                })}
+                </div>);
+        })
+        }</span>;
     return (<div style={{maxHeight:"50vh", overflowY:"auto"}}>
         {peopleShow}<br/>
         {tagShow}<br/>

@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Button,NavItem,Card,Navbar,Nav,Dropdown,DropdownButton, Modal,Tabs,Tab,Badge} from 'react-bootstrap';
+import {Button,NavItem,Card,Navbar,Nav,NavDropdown,Dropdown,DropdownButton, Modal,Tabs,Tab,Badge} from 'react-bootstrap';
 import * as React from 'react';
 import cookie from "react-cookies";
 import {linkStore, store} from './globalState.js';
@@ -47,12 +47,16 @@ function Top(props){
     }
     
     const UserMenu = 
-        <DropdownButton title={store.getState().name} variant="secondary"
-                        >
-                <Dropdown.Item><Link to="/usersettings" style={{color:"black"}}>User Settings</Link></Dropdown.Item>
-                <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
-        </DropdownButton>;
+    <Dropdown>
+  <Dropdown.Toggle variant="secondary" style={{whiteSpace:"pre"}}>{store.getState().name}                  </Dropdown.Toggle>
+
+  <Dropdown.Menu>
         
+                <Dropdown.Item><Link to="/usersettings" style={{color:"black"}}>Settings</Link></Dropdown.Item>
+                <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
+        </Dropdown.Menu>
+        </Dropdown>
+    //<DropdownButton title={store.getState().name} variant="secondary" style={{"min-width":"8em"}}>
     return(
       <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       {store.getState().id=="" || store.getState().id==null ? <Redirect to="/login"/> : ''}
